@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر قطع غيار الهواتف</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Tahoma, Arial, sans-serif;
+        background-color: #121212;
+        color: #FFD700;
+    }
+    header {
+        background-color: #1E1E1E;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        border-bottom: 2px solid #FFD700;
+    }
+    .container {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+    .product {
+        background-color: #1E1E1E;
+        border: 1px solid #FFD700;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        transition: transform 0.2s;
+    }
+    .product:hover { transform: scale(1.03); }
+    .product img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+    .info { padding: 10px; }
+    .name { font-size: 1.1em; margin-bottom: 5px; }
+    .desc { font-size: 0.9em; color: #ccc; margin-bottom: 5px; }
+    .price { font-size: 1em; font-weight: bold; color: #FFD700; }
+    form {
+        max-width: 400px;
+        margin: 20px auto;
+        background: #1E1E1E;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #FFD700;
+    }
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: #121212;
+        border: 1px solid #FFD700;
+        color: #FFD700;
+        border-radius: 5px;
+    }
+    button {
+        background: #FFD700;
+        color: #121212;
+        padding: 10px;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+
+<header>📱 متجر قطع غيار الهواتف</header>
+
+<div id="product-list" class="container"></div>
+
+<div id="admin-form" style="display:none;">
+    <form id="addForm">
+        <h2 style="text-align:center;">إضافة منتج جديد</h2>
+        <input type="text" id="name" placeholder="اسم القطعة" required>
+        <textarea id="desc" placeholder="وصف القطعة" required></textarea>
+        <input type="number" id="price" placeholder="السعر" required>
+        <input type="file" id="image" accept="image/*" required>
+        <button type="submit">إضافة</button>
+    </form>
+</div>
+
+<script>
+    const defaultProducts = [
+        {name:"شاشة هاتف سامسونج",desc:"شاشة AMOLED عالية الدقة",price:"120$",img:"https://i.imgur.com/fh5RzP8.jpeg"},
+        {name:"بطارية آيفون",desc:"بطارية أصلية تدوم طويلاً",price:"60$",img:"https://i.imgur.com/M1u7y8R.jpeg"},
+        {name:"كاميرا خلفية هواوي",desc:"كاميرا بجودة 48 ميجا بيكسل",price:"75$",img:"https://i.imgur.com/Xk4gYjE.jpeg"},
+        {name:"سماعات أذن",desc:"سماعات بلوتوث بجودة صوت عالية",price:"25$",img:"https://i.imgur.com/dHVzGlZ.jpeg"},
+        {name:"لوحة أم شاومي",desc:"لوحة أم أصلية لهواتف شاومي",price:"150$",img:"https://i.imgur.com/JljTbR8.jpeg"},
+        {name:"غطاء حماية",desc:"غطاء حماية مقاوم للصدمات",price:"15$",img:"https://i.imgur.com/JKtRlf3.jpeg"},
+        {name:"شاحن سريع",desc:"شاحن 45W سريع وآمن",price:"30$",img:"https://i.imgur.com/VKpG4ql.jpeg"},
+        {name:"كيبل USB-C",desc:"كيبل شحن ونقل بيانات",price:"10$",img:"https://i.imgur.com/RTsQy3H.jpeg"},
+        {name:"ميكروفون داخلي",desc:"ميكروفون نقي للمكالمات",price:"12$",img:"https://i.imgur.com/M7DhZvx.jpeg"},
+        {name:"سبيكر داخلي",desc:"سبيكر صوت عالي الجودة",price:"18$",img:"https://i.imgur.com/T0oA2C5.jpeg"},
+        {name:"شاشة آيفون",desc:"شاشة Retina أصلية",price:"130$",img:"https://i.imgur.com/lP6x7vS.jpeg"},
+        {name:"بطارية سامسونج",desc:"بطارية أصلية تدوم طويلاً",price:"55$",img:"https://i.imgur.com/fh5RzP8.jpeg"},
+        {name:"عدسة كاميرا",desc:"عدسة كاميرا خلفية أصلية",price:"20$",img:"https://i.imgur.com/Xk4gYjE.jpeg"},
+        {name:"كفر شفاف",desc:"كفر شفاف مضاد للخدوش",price:"8$",img:"https://i.imgur.com/JKtRlf3.jpeg"},
+        {name:"شاحن لاسلكي",desc:"شاحن لاسلكي سريع",price:"40$",img:"https://i.imgur.com/VKpG4ql.jpeg"},
+        {name:"سماعات سلكية",desc:"سماعات عالية الجودة",price:"12$",img:"https://i.imgur.com/dHVzGlZ.jpeg"},
+        {name:"لوحة مفاتيح",desc:"لوحة مفاتيح صغيرة للهواتف",price:"20$",img:"https://i.imgur.com/JljTbR8.jpeg"},
+        {name:"مستشعر بصمة",desc:"مستشعر بصمة سريع الاستجابة",price:"35$",img:"https://i.imgur.com/M1u7y8R.jpeg"},
+        {name:"غطاء خلفي",desc:"غطاء خلفي أنيق للهاتف",price:"14$",img:"https://i.imgur.com/JKtRlf3.jpeg"},
+        {name:"حافظة بطاقات",desc:"حافظة بطاقات جلدية للهاتف",price:"22$",img:"https://i.imgur.com/T0oA2C5.jpeg"}
+    ];
+
+    let products = JSON.parse(localStorage.getItem('products')) || defaultProducts;
+
+    function displayProducts() {
+        const container = document.getElementById('product-list');
+        container.innerHTML = '';
+        products.forEach(p => {
+            container.innerHTML += `
+            <div class="product">
+                <img src="${p.img}" alt="${p.name}">
+                <div class="info">
+                    <div class="name">${p.name}</div>
+                    <div class="desc">${p.desc}</div>
+                    <div class="price">${p.price}</div>
+                </div>
+            </div>
+            `;
+        });
+    }
+
+    function addProduct(name, desc, price, img) {
+        products.push({name, desc, price, img});
+        localStorage.setItem('products', JSON.stringify(products));
+        displayProducts();
+    }
+
+    if (window.location.search.includes('admin=1')) {
+        document.getElementById('admin-form').style.display = 'block';
+        document.getElementById('product-list').style.display = 'none';
+    }
+
+    document.getElementById('addForm')?.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const desc = document.getElementById('desc').value;
+        const price = document.getElementById('price').value;
+        const file = document.getElementById('image').files[0];
+        const reader = new FileReader();
+        reader.onload = function() {
+            addProduct(name, desc, price, reader.result);
+            alert("تمت الإضافة بنجاح!");
+            window.location.href = window.location.pathname;
+        }
+        if(file) reader.readAsDataURL(file);
+    });
+
+    displayProducts();
+</script>
+
+</body>
+</html>
