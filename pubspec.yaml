@@ -1,0 +1,101 @@
+name: fursak_app
+
+description: Fursak - فرصك (وظائف، Firebase، ذكاء صناعي، شركات)
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+
+  sdk: ">=2.18.0 <4.0.0"
+
+dependencies:
+
+  flutter:
+
+    sdk: flutter
+
+  flutter_localizations:
+
+    sdk: flutter
+
+  cupertino_icons: ^1.0.5
+
+  provider: ^6.0.5
+
+  # ✅ مكتبات Firebase
+
+  firebase_core: ^2.10.0
+
+  firebase_auth: ^4.6.0
+
+  cloud_firestore: ^4.8.0
+
+  firebase_storage: ^11.2.0
+
+  firebase_messaging: ^14.5.0
+
+  # ✅ تسجيل الدخول باستخدام Google
+
+  google_sign_in: ^6.1.0
+
+  # ✅ أدوات إضافية
+
+  shared_preferences: ^2.2.2
+
+  intl: ^0.19.0
+
+  http: ^1.2.0
+
+  url_launcher: ^6.1.10
+
+  flutter_local_notifications: ^17.2.1+1
+
+  image_picker: ^1.0.7
+
+  file_picker: ^8.0.0
+
+  path_provider: ^2.1.2
+
+  uuid: ^4.4.0
+
+  # 🧠 ذكاء صناعي (اختياري)
+
+  dart_openai: ^5.0.0
+
+  # huggingface_dart: ^0.3.0
+
+dev_dependencies:
+
+  flutter_test:
+
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+
+    - assets/images/logo.png
+
+  fonts:
+
+    - family: Tajawal
+
+      fonts:
+
+        - asset: assets/fonts/Tajawal-Regular.ttf
+
+        - asset: assets/fonts/Tajawal-Bold.ttf
+
+    - family: Roboto
+
+      fonts:
+
+        - asset: assets/fonts/Roboto-Regular.ttf
+
+        - asset: assets/fonts/Roboto-Bold.ttf   
